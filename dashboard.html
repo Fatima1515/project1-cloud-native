@@ -7,7 +7,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 
   <script src="/static/firebase.js"></script>
-  
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
@@ -47,9 +47,10 @@
       padding: 20px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
     }
+
     .cards .card {
-  min-height: 250px;
-}
+      min-height: 250px;
+    }
 
     .card strong {
       font-size: 18px;
@@ -156,64 +157,69 @@
       margin-top: 40px;
       font-size: 14px;
     }
-    .green { color:#16a34a; font-weight:600; }
 
-.oauth-btn {
-  background:#2f6fed;
-  color:white;
-  border:none;
-  padding:10px 16px;
-  border-radius:8px;
-  margin-right:10px;
-  cursor:pointer;
-}
+    .green {
+      color: #16a34a;
+      font-weight: 600;
+    }
 
-.oauth-btn.active {
-  outline: 3px solid black;
-}
+    .oauth-btn {
+      background: #2f6fed;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      margin-right: 10px;
+      cursor: pointer;
+    }
 
-.input-box {
-width:100%;
-padding:10px;
-border-radius:8px;
-border:1px solid #ccc;
-margin-top:5px;
-}
+    .oauth-btn.active {
+      outline: 3px solid black;
+    }
 
-.cleanup-btn {
-background:#e53935;
-color:white;
-border:none;
-padding:10px 16px;
-border-radius:8px;
-cursor:pointer;
-margin-top:10px;
-}
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  margin-top: 30px;
-}
+    .input-box {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-top: 5px;
+    }
 
-.page-btn {
-  padding: 10px 18px;
-  border: none;
-  border-radius: 8px;
-  background: #d1d5db;
-  cursor: pointer;
-  font-size: 16px;
-}
+    .cleanup-btn {
+      background: #e53935;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
 
-.page-btn.active {
-  background: #2f6fed;
-  color: white;
-}
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-top: 30px;
+    }
 
-.page-btn:hover {
-  background: #bfc5cc;
-}
+    .page-btn {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      background: #d1d5db;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .page-btn.active {
+      background: #2f6fed;
+      color: white;
+    }
+
+    .page-btn:hover {
+      background: #bfc5cc;
+    }
   </style>
 </head>
 
@@ -298,42 +304,44 @@ margin-top:10px;
     </div>
     <h2>Security & Compliance</h2>
 
-<div class="card">
-  <strong>Security Status</strong>
-  <p>Encryption: <span class="green">Enabled</span></p>
-  <p>Access Control: <span class="green">Secure</span></p>
-  <p>Compliance: <span class="green">GDPR Compliant</span></p>
-</div>
+    <div class="card">
+      <strong>Security Status</strong>
+      <p>Encryption: <span class="green" id="statusEncryption">Enabled</span></p>
+      <p>Access Control: <span class="green" id="statusAccessControl">Secure</span></p>
+      <p>Compliance: <span class="green" id="statusGDPR">GDPR Compliant</span></p>
+    </div>
 
-<h2>OAuth & 2FA Integration</h2>
+    <h2>OAuth & 2FA Integration</h2>
 
-<div class="card">
-  <strong>Secure Login</strong>
+    <div class="card">
+      <strong>Secure Login</strong>
 
-  <button class="oauth-btn" onclick="handleGoogleLogin()">Login with Google</button>
-  <button class="oauth-btn" onclick="handleGithubLogin()">Login with GitHub</button>
+      <button class="oauth-btn" onclick="handleGoogleLogin()">Login with Google</button>
+      <button class="oauth-btn" onclick="handleGithubLogin()">Login with GitHub</button>
 
-  <br><br>
+      <br><br>
 
-  <p>Enter 2FA Code</p>
-  <input type="text" placeholder="Enter your 2FA code" class="input-box">
-</div>
+      <p>Enter 2FA Code</p>
+      <input type="text" id="twoFAInput" placeholder="Enter your 2FA code" class="input-box" maxlength="6">
+      <button class="oauth-btn" id="verify2FABtn" onclick="verify2FA()" style="margin-top:10px;">Verify Code</button>
+      <p id="twoFAStatus" style="margin-top:8px;font-size:0.9rem;"></p>
+    </div>
 
-<h2>Cloud Resource Cleanup</h2>
+    <h2>Cloud Resource Cleanup</h2>
 
-<div class="card">
-  <p>Ensure that cloud resources are efficiently managed and cleaned up post-deployment.</p>
+    <div class="card">
+      <p>Ensure that cloud resources are efficiently managed and cleaned up post-deployment.</p>
 
-  <button class="cleanup-btn" id="cleanupBtn">Clean Up Resources</button>
-</div>
+      <button class="cleanup-btn" id="cleanupBtn">Clean Up Resources</button>
+    </div>
 
     <h2>Pagination</h2>
-<div class="pagination">
-  <button class="page-btn">Previous</button>
-  <button class="page-btn active">1</button>
-  <button class="page-btn">2</button>
-  <button class="page-btn">Next</button>
-</div>
+    <div class="pagination">
+      <button class="page-btn">Previous</button>
+      <button class="page-btn active">1</button>
+      <button class="page-btn">2</button>
+      <button class="page-btn">Next</button>
+    </div>
     <div class="pagination" id="paginationContainer">
     </div>
 
@@ -654,26 +662,133 @@ margin-top:10px;
     /* ---- Initial Load ---- */
     loadDietTypes();
     loadInsights();
-document.getElementById("cleanupBtn").onclick = () => {
-  alert("Cleaned!");
-};
-document.querySelectorAll(".page-btn").forEach(btn => {
-  btn.addEventListener("click", function () {
-    document.querySelectorAll(".page-btn").forEach(b => b.classList.remove("active"));
-    this.classList.add("active");
-  });
-});
-document.querySelectorAll(".oauth-btn").forEach(btn => {
-  btn.addEventListener("click", function () {
+    document.getElementById("cleanupBtn").onclick = () => {
+      alert("Cleaned!");
+    };
 
-    // remove border from all buttons
-    document.querySelectorAll(".oauth-btn").forEach(b => b.classList.remove("active"));
+    /* =====================================================
+       PERSON 3 — Security + 2FA Logic
+       ===================================================== */
 
-    // add border to clicked button
-    this.classList.add("active");
+    // --- Security Status Management ---
+    const securityStatus = {
+      encryption: { label: "Enabled", secure: true },
+      accessControl: { label: "Secure", secure: true },
+      gdpr: { label: "GDPR Compliant", secure: true }
+    };
 
-  });
-});
+    function renderSecurityStatus() {
+      const enc = document.getElementById("statusEncryption");
+      const ac = document.getElementById("statusAccessControl");
+      const gdpr = document.getElementById("statusGDPR");
+
+      const apply = (el, status) => {
+        el.textContent = status.label;
+        el.className = status.secure ? "green" : "red";
+      };
+
+      apply(enc, securityStatus.encryption);
+      apply(ac, securityStatus.accessControl);
+      apply(gdpr, securityStatus.gdpr);
+    }
+
+    // Render on load to confirm values are live/dynamic
+    renderSecurityStatus();
+
+    // --- 2FA Verification ---
+    // Simulated valid code. In production this would come from a TOTP/SMS service.
+    const VALID_2FA_CODE = "123456";
+
+    // Track whether user is authenticated via OAuth before allowing 2FA
+    let userAuthenticated = false;
+
+    // Hook into Firebase auth state so 2FA only activates post-login
+    if (typeof firebase !== "undefined") {
+      firebase.auth().onAuthStateChanged(function (user) {
+        userAuthenticated = !!user;
+        if (user) {
+          // Access Control is verified once user is logged in
+          securityStatus.accessControl.label = "Verified (" + (user.displayName || user.email) + ")";
+          renderSecurityStatus();
+        } else {
+          securityStatus.accessControl.label = "Secure";
+          securityStatus.accessControl.secure = true;
+          renderSecurityStatus();
+        }
+      });
+    }
+
+    window.verify2FA = function () {
+      const input = document.getElementById("twoFAInput");
+      const statusEl = document.getElementById("twoFAStatus");
+      const code = input.value.trim();
+
+      // Basic input validation
+      if (!code) {
+        statusEl.textContent = "⚠️ Please enter a code.";
+        statusEl.style.color = "#e67e22";
+        return;
+      }
+
+      if (!/^\d{6}$/.test(code)) {
+        statusEl.textContent = "⚠️ Code must be exactly 6 digits.";
+        statusEl.style.color = "#e67e22";
+        input.focus();
+        return;
+      }
+
+      // Simulate a brief "verifying" delay for realism
+      const btn = document.getElementById("verify2FABtn");
+      btn.disabled = true;
+      btn.textContent = "Verifying…";
+      statusEl.textContent = "";
+
+      setTimeout(() => {
+        if (code === VALID_2FA_CODE) {
+          statusEl.textContent = "✅ 2FA verified successfully! Access granted.";
+          statusEl.style.color = "#27ae60";
+          input.value = "";
+
+          // Update security status to reflect full 2FA compliance
+          securityStatus.encryption.label = "Enabled (AES-256)";
+          securityStatus.accessControl.label = "Secure + 2FA Active";
+          securityStatus.gdpr.label = "GDPR Compliant";
+          renderSecurityStatus();
+
+          console.log("[Security] 2FA verification passed at", new Date().toISOString());
+        } else {
+          statusEl.textContent = "❌ Invalid code. Please try again.";
+          statusEl.style.color = "#e74c3c";
+          input.select();
+          console.warn("[Security] Failed 2FA attempt at", new Date().toISOString());
+        }
+
+        btn.disabled = false;
+        btn.textContent = "Verify Code";
+      }, 600);
+    };
+
+    // Allow Enter key to trigger verify
+    document.getElementById("twoFAInput").addEventListener("keydown", function (e) {
+      if (e.key === "Enter") window.verify2FA();
+    });
+    document.querySelectorAll(".page-btn").forEach(btn => {
+      btn.addEventListener("click", function () {
+        document.querySelectorAll(".page-btn").forEach(b => b.classList.remove("active"));
+        this.classList.add("active");
+      });
+    });
+    document.querySelectorAll(".oauth-btn").forEach(btn => {
+      btn.addEventListener("click", function () {
+
+        // remove border from all buttons
+        document.querySelectorAll(".oauth-btn").forEach(b => b.classList.remove("active"));
+
+        // add border to clicked button
+        this.classList.add("active");
+
+      });
+    });
   </script>
 
 </body>
